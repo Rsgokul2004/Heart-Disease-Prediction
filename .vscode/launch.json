@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Flask app",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Train model",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/prediction.py",
+      "console": "integratedTerminal"
+    }
+  ]
+}

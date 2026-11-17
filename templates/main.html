@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Disease Predictor</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://kit.fontawesome.com/5f3f547070.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Website Title -->
+
+  <div class="container">
+    <h2 class='container-heading'><span class="heading_font">Heart Disease Predictor</span></h2>
+    <div class='description'>
+      <p>A Machine Learning Web Application that predicts chances of having heart Disease or not, Built with Flask and Deployed using Heroku.</p><br>
+        <p>{% if accuracy %}(Note: estimated accuracy is about {{ accuracy }}% based on cross-validation){% endif %}</p>
+    </div>
+  </div>
+
+  <!-- Text Area -->
+  <div class="ml-container">
+    {% if errors %}
+    <div class="errors">
+      <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+    <form action="{{ url_for('predict')}}" method="POST">
+
+      
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" min="29" max="77" step="1" required value="{{ form.get('age', '') }}" placeholder="Your age.."><br>
+
+
+
+        <label for="sex">Sex</label>
+        <select id="sex" name="sex" required>
+          <option value="" disabled{% if not form.get('sex') %} selected{% endif %}>----select option----</option>
+          <option value="1"{% if form.get('sex') == '1' %} selected{% endif %}>Male</option>
+          <option value="0"{% if form.get('sex') == '0' %} selected{% endif %}>Female</option>
+        </select><br>
+
+
+
+        <label for="cp">Chest Pain Type</label>
+        <select id="cp" name="cp" required>
+          <option value="" disabled{% if not form.get('cp') %} selected{% endif %}>----select option----</option>
+          <option value="0"{% if form.get('cp') == '0' %} selected{% endif %}>Typical Angina</option>
+          <option value="1"{% if form.get('cp') == '1' %} selected{% endif %}>Atypical Angina</option>
+          <option value="2"{% if form.get('cp') == '2' %} selected{% endif %}>Non-anginal Pain</option>
+          <option value="3"{% if form.get('cp') == '3' %} selected{% endif %}>Asymptomatic</option>
+        </select><br>
+
+
+
+        <label for="trestbps">Resting Blood Pressure</label>
+        <input type="number" id="trestbps" name="trestbps" min="94" max="200" step="1" required value="{{ form.get('trestbps', '') }}" placeholder="A number in range [94-200] mmHg"><br>
+
+
+
+        <label for="chol">Serum Cholesterol</label>
+        <input type="number" id="chol" name="chol" min="126" max="564" step="1" required value="{{ form.get('chol', '') }}" placeholder="A number in range [126-564] mg/dl"><br>
+
+
+
+        <label for="fbs">Fasting Blood Sugar</label>
+        <select id="fbs" name="fbs" required>
+          <option value="" disabled{% if not form.get('fbs') %} selected{% endif %}>----select option----</option>
+          <option value="1"{% if form.get('fbs') == '1' %} selected{% endif %}>Greater than 120 mg/dl</option>
+          <option value="0"{% if form.get('fbs') == '0' %} selected{% endif %}>Less than 120 mg/dl</option>
+        </select><br>
+
+
+
+        <label for="restecg">Resting ECG Results</label>
+        <select id="restecg" name="restecg" required>
+          <option value="" disabled{% if not form.get('restecg') %} selected{% endif %}>----select option----</option>
+          <option value="0"{% if form.get('restecg') == '0' %} selected{% endif %}>Normal</option>
+          <option value="1"{% if form.get('restecg') == '1' %} selected{% endif %}>Having ST-T wave abnormality</option>
+          <option value="2"{% if form.get('restecg') == '2' %} selected{% endif %}>Probable or definite left ventricular
+            hypertrophy</option>
+        </select><br>
+
+
+
+        <label for="thalach">Max Heart Rate</label>
+        <input type="number" id="thalach" name="thalach" min="71" max="202" step="1" required value="{{ form.get('thalach', '') }}" placeholder="A number in range [71-202] bpm"><br>
+
+
+        <label for="exang">Exercise-induced Angina</label>
+        <select id="exang" name="exang" required>
+          <option value="" disabled{% if not form.get('exang') %} selected{% endif %}>----select option----</option>
+          <option value="1"{% if form.get('exang') == '1' %} selected{% endif %}>Yes</option>
+          <option value="0"{% if form.get('exang') == '0' %} selected{% endif %}>No</option>
+        </select><br>
+
+
+        <label for="oldpeak">ST depression</label>
+        <input type="number" id="oldpeak" name="oldpeak" min="0" max="6.2" step="0.1" required value="{{ form.get('oldpeak', '') }}" placeholder="ST depression, typically in [0-6.2]"><br>
+
+
+
+        <label for="slope">Slope of peak exercise ST segment</label>
+        <select id="slope" name="slope" required>
+          <option value="" disabled{% if not form.get('slope') %} selected{% endif %}>----select option----</option>
+          <option value="0"{% if form.get('slope') == '0' %} selected{% endif %}>Upsloping</option>
+          <option value="1"{% if form.get('slope') == '1' %} selected{% endif %}>Flat</option>
+          <option value="2"{% if form.get('slope') == '2' %} selected{% endif %}>Downsloping</option>
+        </select><br>
+        
+
+        <label for="ca">Number of Major vessels</label>
+        <input type="number" id="ca" name="ca" min="0" max="3" step="1" required value="{{ form.get('ca', '') }}" placeholder="A number in range [0-3]"><br> 
+                          
+
+
+        <label for="thal">Thalassemia</label>
+        <select id="thal" name="thal" required>
+          <option value="" disabled{% if not form.get('thal') %} selected{% endif %}>----select option----</option>
+          <option value="0"{% if form.get('thal') == '0' %} selected{% endif %}>Normal</option>
+          <option value="1"{% if form.get('thal') == '1' %} selected{% endif %}>Fixed Defect</option> 
+          <option value="2"{% if form.get('thal') == '2' %} selected{% endif %}>Reversible Defect</option>  
+        </select><br>
+
+      
+
+      <input type="submit" class="my-cta-button" value="Predict">
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <div class='footer'>
+    <div class="contact">
+     
+    </div>
+    <p class='footer-description'>Made by GOKUL</p>
+    <p class='footer-description'>For educational purposes only. Not a medical diagnosis; consult a doctor.</p>
+  </div>
+
+</body>
+
+</html>
