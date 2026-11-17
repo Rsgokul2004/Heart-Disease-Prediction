@@ -9,3 +9,15 @@
 
 Production: `gunicorn app:app` (see Procfile).
 The pickled model must be re-created with `python prediction.py` whenever scikit-learn is upgraded.
+---
+
+## Project Screenshots
+
+### Home Page
+![Home Page](screenshots/home.png)
+
+### Prediction Page
+![Prediction Page](screenshots/prediction.png)
+
+### Prediction Result
+![Prediction Result](screenshots/result.png)
